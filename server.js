@@ -13,7 +13,7 @@ const EXPECTED_API_KEY = 'coalookupsecure';
 
 app.use(cors());
 
-app.get('/lookup/:coa', async (req, res) => {
+app.get('/api/lookup/:coa', async (req, res) => {
   const userKey = req.headers['x-api-key'];
   if (userKey !== EXPECTED_API_KEY) {
     return res.status(403).json({ error: 'Forbidden: Invalid API key' });
