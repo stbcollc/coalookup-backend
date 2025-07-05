@@ -22,7 +22,7 @@ app.get('/api/lookup/:coa', async (req, res) => {
   const coa = req.params.coa.trim();
 
   try {
-    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:D1000?key=${API_KEY}`;
+    const url = `https://sheets.googleapis.com/v4/spreadsheets/${SHEET_ID}/values/${SHEET_NAME}!A2:C1000?key=${API_KEY}`;
     const response = await fetch(url);
     const sheet = await response.json();
 
@@ -30,7 +30,7 @@ app.get('/api/lookup/:coa', async (req, res) => {
       return res.status(500).json({ error: 'Sheet data missing or private' });
     }
 
-    const headers = ['COANUMBER', 'NAME', 'ITEM', 'IMAGE'];
+    const headers = ['COANUMBER', 'NAME', 'IMAGE'];
     const match = sheet.values.find(row => row[0]?.trim() === coa);
 
     if (!match) {
