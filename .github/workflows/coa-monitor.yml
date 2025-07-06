@@ -13,7 +13,7 @@ jobs:
       - name: Ping COA Lookup
         id: ping
         run: |
-          STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://coalookup-api.onrender.com/invalid-path)
+          STATUS=$(curl -m 50 --connect-timeout 20 -s -o /dev/null -w "%{http_code}" https://coalookup-api.onrender.com/invalid-path)
           echo "HTTP Status: $STATUS"
           echo "status=$STATUS" >> $GITHUB_OUTPUT
 
