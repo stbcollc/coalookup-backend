@@ -6,6 +6,10 @@ require('dotenv').config();
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.get('/ping', (req, res) => {
+  res.status(200).send('pong');
+});
+
 const SHEET_ID = '1qXaWG0O4Pi5QjUrzmdYx2sj-bGWESi17zL0t3gqfHhE';
 const API_KEY = process.env.GOOGLE_SHEETS_API_KEY;
 const SHEET_NAME = 'COADATABASE';
