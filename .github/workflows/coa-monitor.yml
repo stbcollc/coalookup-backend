@@ -10,50 +10,36 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-     - name: Ping COA Lookup with retries and timing
-  id: ping
-  run: |
-    echo "Pinging COA Lookup service with up to 3 retries..."
+      - name: Ping COA Lookup with retries and timing
+        id: ping
+        run: |
+          echo "Pinging COA Lookup service with up to 3 retries..."
 
-    START=$(date +%s)
-    MAX_ATTEMPTS=3
-    DELAY=20
-    COUNT=1
-    STATUS=0
+          START=$(date +%s)
+          MAX_ATTEMPTS=3
+          DELAY=20
+          COUNT=1
+          STATUS=0
 
-    while [ $COUNT -le $MAX_ATTEMPTS ]; do
-      echo "Attempt $COUNT..."
-      STATUS=$(curl -m 70 --connect-timeout 45 -s -o /dev/null -w "%{http_code}" https://coalookup-api.onrender.com/ping)
-      if [ "$STATUS" = "200" ]; then
-        echo "Ping successful."
-        break
-      fi
-      echo "Ping failed with status $STATUS. Waiting $DELAY seconds before retry..."
-      sleep $DELAY
-      COUNT=$((COUNT + 1))
-    done
+          while [ $COUNT -le $MAX_ATTEMPTS ]; do
+            echo "Attempt $COUNT..."
+            STATUS=$(curl -m 70 --connect-timeout 45 -s -o /dev/null -w "%{http_code}" https://coalookup-api.onrender.com/ping)
+            if [ "$STATUS" = "200" ]; then
+              echo "Ping successful."
+              break
+            fi
+            echo "Ping failed with status $STATUS. Waiting $DELAY seconds before retry..."
+            sleep $DELAY
+            COUNT=$((COUNT + 1))
+          done
 
-    END=$(date +%s)
-    DURATION=$((END - START))
+          END=$(date +%s)
+          DURATION=$((END - START))
 
-    echo "Final HTTP Status: $STATUS"
-    echo "Total duration: $DURATION seconds"
-    echo "status=$STATUS" >> $GITHUB_OUTPUT
-    echo "duration=$DURATION" >> $GITHUB_OUTPUT
-
+          echo "Final HTTP Status: $STATUS"
+          echo "Total duration: $DURATION seconds"
+          echo "status=$STATUS" >> $GITHUB_OUTPUT
+          echo "duration=$DURATION" >> $GITHUB_OUTPUT
 
       - name: Send email if service is down
-        if: steps.ping.outputs.status != '200'
-        uses: dawidd6/action-send-mail@v3
-        with:
-          server_address: smtp.gmail.com
-          server_port: 465
-          username: ${{ secrets.GMAIL_USER }}
-          password: ${{ secrets.GMAIL_APP_PASSWORD }}
-          subject: "🚨 COA Lookup DOWN"
-          body: |
-            The COA Lookup service at https://coalookup-api.onrender.com/ping is DOWN.
-            Status code returned: ${{ steps.ping.outputs.status }}
-            Ping duration: ${{ steps.ping.outputs.duration }} seconds
-          to: stbcollc@gmail.com
-          from: GitHub Monitor <${{ secrets.GMAIL_USER }}>
+        if: ste
