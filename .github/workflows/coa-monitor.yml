@@ -42,4 +42,17 @@ jobs:
           echo "duration=$DURATION" >> $GITHUB_OUTPUT
 
       - name: Send email if service is down
-        if: ste
+        if: steps.ping.outputs.status != '200'
+        uses: dawidd6/action-send-mail@v3
+        with:
+          server_address: smtp.gmail.com
+          server_port: 465
+          username: ${{ secrets.GMAIL_USER }}
+          password: ${{ secrets.GMAIL_APP_PASSWORD }}
+          subject: "🚨 COA Lookup DOWN"
+          body: |
+            The COA Lookup service at https://coalookup-api.onrender.com/ping is DOWN.
+            Status code returned: ${{ steps.ping.outputs.status }}
+            Ping duration: ${{ steps.ping.outputs.duration }} seconds
+          to: stbcollc@gmail.com
+          from: GitHub Monitor <${{ secrets.GMAIL_USER }}>
